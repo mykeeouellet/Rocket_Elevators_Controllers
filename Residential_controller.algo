@@ -1,0 +1,156 @@
+// this program controls residential elevators
+
+//Inventory 
+    //Column 
+        button
+        floor
+
+    //Elevator                                                                                                                                                                                                                                      
+        floorsList
+        currentFloor
+        button
+        direction
+        door
+
+//Sequences 
+    origin
+    elevatorRequest
+    findElevator
+    moveElevator
+    operateDoors
+
+SEQUENCE origin 
+    SET currentFloor to floor#1
+    SET elevatorState to idle
+
+END SEQUENCE
+
+
+//This is the sequence that inputs floor and direction from the column controller//
+
+SEQUENCE btnColumn RETURNING floor and direction 
+    OBTAIN floor 
+
+    IF btnColumnUp is pressed 
+        THEN SET direction to up
+        RETURN floor & direction
+
+    ELSE IF btnColumnDown is pressed
+        THEN SET direction to down
+        RETURN floor & direction
+        
+    END IF
+
+END SEQUENCE
+
+
+//This is the sequence that controls the opening of the elevator doors//
+
+SEQUENCE operateDoors WITH selectedElevator and elevDirection RETURNING doorState
+
+    WHILE elevDirection is UP or DOWN 
+        DO close doors 
+        SET doorState to close
+
+            IF elevDirection is NULL 
+                WAIT five seconds
+                THEN DO open doors
+                SET doorState to open 
+                WAIT twenty seconds
+                THEN DO close doors
+                SET doorState to close
+
+                    IF btnElevOpen is pressed 
+                        THEN DO open doors
+                        SET doorState to open 
+                        WAIT twenty seconds
+                        THEN DO close doors
+                        SET doorState to close
+                    END IF
+
+                    IF btnElevClose is pressed
+                        THEN DO close doors
+                        SET doorState to close
+                    END IF
+            END IF
+
+    END WHILE
+END SEQUENCE
+
+
+//This is the sequence that finds the correct elevator to send to the user after he calls the elevator//
+
+SEQUENCE findElevator WITH floor & direction RETURNING selectedElevator
+
+    FOR EACH elevator in elevatorsList
+        OBTAIN elevDirection
+        OBTAIN currentFloor of elevator 
+        COMPUTE diffElev as floor minus currentFloor of elevator
+
+            IF diffElev equals zero AND elevDirection is UP AND direction is UP
+                THEN RETURN elevator as selectedElevator
+            ELSE IF diffElev is greater than zero AND elevDirection is direction
+                THEN RETURN elevator as selectedElevator
+            ELSE IF diffElev is smaller than zero AND elevDirection equals direction
+                THEN RETURN elevator as selectedElevator
+            
+
+            END IF
+
+END SEQUENCE
+
+
+//This is the sequence that controls the movement of the elevator//
+
+SEQUENCE moveElevator WITH floor and selectedElevator RETURNING elevDirection
+
+    OBTAIN currentFloor of selectedElevator
+
+    WHILE currentFloor is not equal to floor 
+
+        IF currentFloor is greater than floor 
+            THEN SET elevDirection to goingDown 
+
+        ELSE IF currentFloor is smaller than floor
+            THEN SET elevDirection to goingUP
+
+        ELSE IF currentFloor equals floor
+            THEN SET elevDirection to NULL          
+            CALL operateDoors 
+        END IF
+
+    END WHILE
+
+END SEQUENCE
+
+
+
+//User interacts with elevator to request an elevator//
+
+SEQUENCE elevatorRequest WITH floor and direction
+
+    CALL btnColumn WITH floor and direction
+
+        CALL findElevator WITH floor and direction
+
+            CALL moveElevator WITH floor and selectedElevator
+
+END SEQUENCE
+
+
+
+// User interacts with elevator controller to request a floor//
+
+SEQUENCE requestFloor WITH floor
+
+        CALL moveElevator
+    
+END SEQUENCE
+
+
+
+
+
+
+
+
