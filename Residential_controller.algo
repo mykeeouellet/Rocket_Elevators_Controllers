@@ -1,5 +1,7 @@
 // This program controls residential elevators
 
+//This initiate a list of all the elevators used in the building with their propreties
+---------------------------------------------------
 INIT elevatorsList as [elevator1, elevator2]
 
 FOR EACH elevator in elevatorsList 
@@ -13,8 +15,7 @@ FOR EACH elevator in elevatorsList
     INIT origin
 
 END FOR
-
-
+---------------------------------------------------
 //This is the sequence that sets origin parameters to the elevators
 
 SEQUENCE origin USING selectedElevator
@@ -36,8 +37,7 @@ SEQUENCE origin USING selectedElevator
     END IF
 
 END SEQUENCE
-
-
+---------------------------------------------------------------------------------------------------------------------------
 //This is the sequence that determine the user position and direction based on the input he gives to the column controller
 
 SEQUENCE elevatorRequest
@@ -54,8 +54,7 @@ SEQUENCE elevatorRequest
     END IF
 
 END SEQUENCE
-
-
+-----------------------------------------------------------------------------------------------------------------------------
 //This is the sequence that controls the opening of the elevator doors//
 
 SEQUENCE operateDoors USING selectedElevator 
@@ -91,8 +90,7 @@ SEQUENCE operateDoors USING selectedElevator
     END WHILE
 
 END SEQUENCE
-
-
+-----------------------------------------------------------------------------------------------------------------------
 //This is the sequence that finds the correct elevator to send to the user after he has called the elevator//
 
 SEQUENCE findElevator USING userfloor & userDirection
@@ -147,8 +145,7 @@ SEQUENCE findElevator USING userfloor & userDirection
     RETURN selectedElevator
 
 END SEQUENCE
-
-
+--------------------------------------------------------------------------------------------------------------------------------
 //This is the sequence that determines if the currentWeight of the elevator is greater than its weightLimit
 
 SEQUENCE weightCheck USING elevator.currentWeight
@@ -163,8 +160,7 @@ SEQUENCE weightCheck USING elevator.currentWeight
         END IF 
 
 END SEQUENCE
-
-
+--------------------------------------------------------------------------------------------------------------------------------
 //This is the sequence that controls the movement of the elevator//
 
 SEQUENCE moveElevator USING userFloor and selectedElevator
@@ -222,9 +218,7 @@ SEQUENCE moveElevator USING userFloor and selectedElevator
     END IF
 
 END SEQUENCE
-
-
-
+----------------------------------------------------------------------------------------------------------------------
 //This is the sequence that controls the whole user interaction OUTSIDE of the elevator
 
 SEQUENCE callElevator
@@ -236,9 +230,7 @@ SEQUENCE callElevator
                 CALL moveElevator WITH userFloor and selectedElevator RETURNING elevator.status
 
 END SEQUENCE
-
-
-
+--------------------------------------------------------------------------------------------------------------
 //This is the sequence that controls the whole user interaction INSIDE of the elevator
 
 SEQUENCE requestFloor USING userFloor  
@@ -246,7 +238,7 @@ SEQUENCE requestFloor USING userFloor
     CALL moveElevator WITH userFloor and selectedElevator RETURNING elevator.status
     
 END SEQUENCE
-
+---------------------------------------------------------------------------------------------------------
 
 
 

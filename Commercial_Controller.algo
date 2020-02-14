@@ -1,5 +1,8 @@
 //This program controls commercial elevators
 
+//This initiate lists of all the columns in the building including 
+  their operating floors, elevators and their respective propreties//
+--------------------------------------------------------------------------------------------------------------------------
 INIT columnList as [columnA, columnB, columnC, columnD]
 
 FOR EACH column in columnList
@@ -23,24 +26,7 @@ FOR EACH column in columnList
         END FOR
 
 END FOR
-
-
-//This is the sequence that determines if the currentWeight of the elevator is greater than its weightLimit
-
-SEQUENCE weightCheck USING elevator.currentWeight
-
-    OBTAIN elevator.weightLimit
-
-        IF elevator.currentWeight is greater or equal to elevator.weightLimit
-            RETURN FALSE
-        ELSE 
-            RETURN TRUE
-
-        END IF 
-
-END SEQUENCE
-
-
+--------------------------------------------------------------------------------------------------------------
 //This is the sequence that sets origin parameters to the elevators
 
 SEQUENCE origin USING selectedElevator
@@ -62,8 +48,7 @@ SEQUENCE origin USING selectedElevator
     END IF
 
 END SEQUENCE
-
-
+----------------------------------------------------------------------------------------------------------------------------------
 //This is the sequence that controls the input of the user
 
 SEQUENCE floorRequest USING requestedFloor and userFloor
@@ -79,8 +64,7 @@ SEQUENCE floorRequest USING requestedFloor and userFloor
     RETURN userDirection
 
 END SEQUENCE
-
-
+--------------------------------------------------------------------------------------------------------
 //This is the sequence that determines wich column to use
 
 SEQUENCE findColumn USING requestedFloor 
@@ -96,8 +80,7 @@ SEQUENCE findColumn USING requestedFloor
     END FOR
 
 END SEQUENCE
-
-
+----------------------------------------------------------------------------------------------------
 //This is the sequence that determines wich elevator to use 
 
 SEQUENCE findElevator USING selectedColumn, userFloor and userDirection
@@ -169,8 +152,22 @@ SEQUENCE findElevator USING selectedColumn, userFloor and userDirection
     END IF 
  
 END SEQUENCE
+-----------------------------------------------------------------------------------------------------------------------------
+//This is the sequence that determines if the currentWeight of the elevator is greater than its weightLimit
 
+SEQUENCE weightCheck USING elevator.currentWeight
 
+    OBTAIN elevator.weightLimit
+
+        IF elevator.currentWeight is greater or equal to elevator.weightLimit
+            RETURN FALSE
+        ELSE 
+            RETURN TRUE
+
+        END IF 
+
+END SEQUENCE
+------------------------------------------------------------------------------------------------------------------------------
 //This is the sequence that controls the movement of the elevator
 
 SEQUENCE moveElevator USING selectedColumn, selectedElevator, requestedFloor and userFloor
@@ -224,8 +221,7 @@ SEQUENCE moveElevator USING selectedColumn, selectedElevator, requestedFloor and
     RETURN elevator.status
 
 END SEQUENCE
-
-
+------------------------------------------------------------------------------------------------------------------------
 //This is the sequence that operate the elevator doors
 
 SEQUENCE operateDoors USING selectedColumn and selectedElevator
@@ -262,8 +258,7 @@ SEQUENCE operateDoors USING selectedColumn and selectedElevator
     END WHILE
 
 END SEQUENCE
-
-
+---------------------------------------------------------------------------------------------------------------
 //This is the sequence that controls the whole user interaction with the elevator, including the other sequences
 
 SEQUENCE requestElevator 
@@ -278,3 +273,4 @@ SEQUENCE requestElevator
     
 
 END SEQUENCE 
+----------------------------------------------------------------------------------------------------------------------
