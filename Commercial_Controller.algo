@@ -101,6 +101,7 @@ SEQUENCE findElevator
 
             OBTAIN currentFloor
             OBTAIN elevatorDirection
+            COMPUTE diffElev as userFloor minus currentFloor of elevator
 
             IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
             THEN SET elevValue to 1
@@ -121,7 +122,7 @@ SEQUENCE findElevator
 
             END IF 
 
-            DETERMINE elevator with lowest elelvValue 
+            DETERMINE elevator with lowest elelvValue and lowest diffElev as selectedElevator 
             RETURN selectedElevator
 
         END FOR
@@ -132,6 +133,7 @@ SEQUENCE findElevator
 
             OBTAIN currentFloor
             OBTAIN elevatorDirection
+            COMPUTE diffElev as userFloor minus currentFloor of elevator
 
             IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
             THEN SET elevValue to 1
@@ -152,7 +154,7 @@ SEQUENCE findElevator
 
             END IF 
 
-            DETERMINE elevator with lowest elelvValue 
+            DETERMINE elevator with lowest elelvValue and lowest diffElev as selectedElevator  
             RETURN selectedElevator
 
         END FOR 
@@ -163,6 +165,7 @@ SEQUENCE findElevator
 
             OBTAIN currentFloor
             OBTAIN elevatorDirection
+            COMPUTE diffElev as userFloor minus currentFloor of elevator
 
             IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
             THEN SET elevValue to 1
@@ -182,7 +185,7 @@ SEQUENCE findElevator
             SET elelvValue to 10
 
             END IF 
-            DETERMINE elevator with lowest elelvValue 
+            DETERMINE elevator with lowest elelvValue and lowest diffElev as selectedElevator 
             RETURN selectedElevator
 
         END FOR
@@ -193,6 +196,7 @@ SEQUENCE findElevator
 
             OBTAIN currentFloor
             OBTAIN elevatorDirection
+            COMPUTE diffElev as userFloor minus currentFloor of elevator
 
             IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
             THEN SET elevValue to 1
@@ -212,7 +216,7 @@ SEQUENCE findElevator
             SET elelvValue to 10
 
             END IF 
-            DETERMINE elevator with lowest elelvValue 
+            DETERMINE elevator with lowest elelvValue and lowest diffElev as selectedElevator 
             RETURN selectedElevator
 
         END FOR 
