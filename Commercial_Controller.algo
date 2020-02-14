@@ -40,12 +40,26 @@ SEQUENCE weightCheck USING elevator.currentWeight
 
 END SEQUENCE
 
+
 //This is the sequence that sets origin parameters to the elevators
 
 SEQUENCE origin USING selectedElevator
     
-    SET elevator.origin to 1
-    SET elevator.status to idle
+    OBTAIN elevator.origin 
+    
+    IF elevator.currentFloor is greater than elevator.origin 
+        DO moveDown 
+        THEN SET elevator.status to down
+
+    IF elevator.currentFloor is less than elevator.origin 
+        DO moveUp 
+        THEN SET elevator.status to up
+
+    ELSE 
+        DO idle
+        THEN SET elevator.status to idle
+    
+    END IF
 
 END SEQUENCE
 
@@ -186,22 +200,24 @@ SEQUENCE moveElevator USING selectedColumn, selectedElevator, requestedFloor and
     WHILE elevator.currentFloor is not equal to userFloor OR requestedFloor
 
         IF elevator.currentFloor is greater than userFloor OR requestedFloor
-            THEN SET elevator.status to DOWN 
+            DO moveDown
+            THEN SET elevator.status to down 
 
         ELSE IF elevator.currentFloor is less than userFloor OR requestedFloor
-            THEN SET elevator.status to UP
+            DO moveUp
+            THEN SET elevator.status to up
 
         ELSE 
-            THEN SET elevator.status to IDLE 
-
-            CALL operateDoors WITH selectedColumn and selectedElevator
+            DO idle
+            THEN SET elevator.status to idle 
+             CALL operateDoors WITH selectedColumn and selectedElevator
 
         END IF
 
     END WHILE
 
-    IF elevator.status is IDLE for more than 1 minute 
-        THEN CALL origin
+    IF elevator.status is idle for more than 1 minute 
+        THEN CALL origin WITH selectedColumn and selectedElevator
 
     END IF 
 

@@ -19,24 +19,21 @@ END FOR
 
 SEQUENCE origin USING selectedElevator
     
-    SET elevator.origin to elevator.currentFloor
-    SET elevator.status to idle
+    OBTAIN elevator.origin 
+    
+    IF elevator.currentFloor is greater than elevator.origin 
+        DO moveDown 
+        THEN SET elevator.status to down
 
-END SEQUENCE
+    IF elevator.currentFloor is less than elevator.origin 
+        DO moveUp 
+        THEN SET elevator.status to up
 
-
-//This is the sequence that determines if the currentWeight of the elevator is greater than its weightLimit
-
-SEQUENCE weightCheck USING elevator.currentWeight
-
-    OBTAIN weightLimit
-
-        IF elevator.currentWeight is greater or equal to elevator.weightLimit
-            RETURN FALSE
-        ELSE 
-            RETURN TRUE
-
-        END IF 
+    ELSE 
+        DO idle
+        THEN SET elevator.status to idle
+    
+    END IF
 
 END SEQUENCE
 
@@ -152,6 +149,22 @@ SEQUENCE findElevator USING userfloor & userDirection
 END SEQUENCE
 
 
+//This is the sequence that determines if the currentWeight of the elevator is greater than its weightLimit
+
+SEQUENCE weightCheck USING elevator.currentWeight
+
+    OBTAIN weightLimit
+
+        IF elevator.currentWeight is greater or equal to elevator.weightLimit
+            RETURN FALSE
+        ELSE 
+            RETURN TRUE
+
+        END IF 
+
+END SEQUENCE
+
+
 //This is the sequence that controls the movement of the elevator//
 
 SEQUENCE moveElevator USING userFloor and selectedElevator
@@ -181,17 +194,20 @@ SEQUENCE moveElevator USING userFloor and selectedElevator
     WHILE elevator.currentFloor is not equal to userFloor 
 
         IF elevator.currentFloor is greater than userFloor 
-            THEN SET elevator.status to DOWN 
+            DO moveDown
+            THEN SET elevator.status to down 
             DISPLAY arrow pointing DOWN 
             RETURN elevator.status
 
         ELSE IF elevator.currentFloor is smaller than userFloor
-            THEN SET elevator.status to UP
+            DO moveUp
+            THEN SET elevator.status to up
             DISPLAY arrow pointing UP
             RETURN elevator.status
 
         ELSE IF elevator.currentFloor equals userFloor
-            THEN SET elevator.status to IDLE   
+            DO idle
+            THEN SET elevator.status to idle   
             RETURN elevator.status  
 
             CALL operateDoors WITH selectedElevator
