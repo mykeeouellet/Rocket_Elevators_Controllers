@@ -6,7 +6,7 @@ FOR EACH column in columnList
 
     INIT numberOfFloorPerColumn as (totalFloors minus totalBasements) divided by (totalColumn minus one)
     INIT floorMax as ((totalColumn minus one) times numberOfFloorPerColumn)
-    INIT floorMin as ((totalColumn minus one) times numberOfFloorPerColumn) minus (numberOfFloorPerColummn plus one)
+    INIT floorMin as ((totalColumn minus one) times numberOfFloorPerColumn) minus (numberOfFloorPerColummn minus one)
     INIT floorsList as [floorMin, floorMax]
     INIT elevatorsList as [elevator1, elevator2, elevator3]
 
