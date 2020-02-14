@@ -97,7 +97,7 @@ SEQUENCE findElevator
 
     IF selectedColumn is columnA 
 
-        FOR EACH elevator in elevatorsListA 
+        FOR EACH elevator in selectedColumn elevatorsList 
 
             OBTAIN currentFloor
             OBTAIN elevatorDirection
@@ -126,10 +126,9 @@ SEQUENCE findElevator
             RETURN selectedElevator
 
         END FOR
-
-    ELSE IF selectedColumn is columnB 
-
-        FOR EACH elevator in elevatorsListB 
+ 
+    ELSE 
+        FOR EACH elevator in selectedColumn elevatorsList
 
             OBTAIN currentFloor
             OBTAIN elevatorDirection
@@ -159,67 +158,7 @@ SEQUENCE findElevator
 
         END FOR 
 
-    ELSE IF selectedColumn is columnC 
-
-        FOR EACH elevator in elevatorsListC 
-
-            OBTAIN currentFloor
-            OBTAIN elevatorDirection
-            COMPUTE diffElev as userFloor minus currentFloor of elevator
-
-            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
-            THEN SET elevValue to 1
-            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
-            THEN SET elevValue to 2
-            IF currentFloor is greater than userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
-            THEN SET elevValue to 3
-            IF currentFloor is less than userFloor AND elevatorDirection is IDLE and userDirection is DOWN
-            THEN SET elevValue to 4 
-            IF currentFloor is greater than userFloor AND elevatorDirection is DOWN and userDirection is DOWN
-            THEN SET elevValue to 5
-            IF currentFloor is less than userFloor AND elevatorDirection is UP and userDirection is DOWN
-            THEN SET elevValue to 6
-            IF currentFloor is less than userFloor AND elevatorDirection is DOWN and userDirection is DOWN 
-            THEN SET elevValue to 7
-            ELSE 
-            SET elelvValue to 10
-
-            END IF 
-            DETERMINE elevator with lowest elelvValue and lowest diffElev as selectedElevator 
-            RETURN selectedElevator
-
-        END FOR
-
-    ELSE IF selectedColumn is columnD 
-
-        FOR EACH elevator in elevatorsListD 
-
-            OBTAIN currentFloor
-            OBTAIN elevatorDirection
-            COMPUTE diffElev as userFloor minus currentFloor of elevator
-
-            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
-            THEN SET elevValue to 1
-            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
-            THEN SET elevValue to 2
-            IF currentFloor is greater than userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
-            THEN SET elevValue to 3
-            IF currentFloor is less than userFloor AND elevatorDirection is IDLE and userDirection is DOWN
-            THEN SET elevValue to 4 
-            IF currentFloor is greater than userFloor AND elevatorDirection is DOWN and userDirection is DOWN
-            THEN SET elevValue to 5
-            IF currentFloor is less than userFloor AND elevatorDirection is UP and userDirection is DOWN
-            THEN SET elevValue to 6
-            IF currentFloor is less than userFloor AND elevatorDirection is DOWN and userDirection is DOWN 
-            THEN SET elevValue to 7
-            ELSE 
-            SET elelvValue to 10
-
-            END IF 
-            DETERMINE elevator with lowest elelvValue and lowest diffElev as selectedElevator 
-            RETURN selectedElevator
-
-        END FOR 
+   
     END IF 
  
 END SEQUENCE
