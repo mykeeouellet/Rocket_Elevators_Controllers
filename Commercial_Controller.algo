@@ -1,0 +1,327 @@
+//This program controls commercial elevators
+
+INIT columnList as [columnA, columnB, columnC, columnD]
+
+FOR EACH column in columnList
+
+    INIT numberOfFloorPerColumn as (totalFloors minus totalBasements) divided by (totalColumn minus one)
+    INIT floorMax as ((totalColumn minus one) times numberOfFloorPerColumn)
+    INIT floorMin as ((totalColumn minus one) times numberOfFloorPerColumn) minus (numberOfFloorPerColummn plus one)
+    INIT floorsList as [floorMin, floorMax]
+    INIT elevatorsList as [elevator1, elevator2, elevator3]
+
+        FOR EACH elevator in elevatorsList
+
+            SET elevValue 
+            SET elevatorDirection
+            SET currentFloor
+            SET weightLimit
+            SET origin
+            SET OpenDoor
+
+        END FOR
+
+END FOR
+
+
+//This is the sequence that determines if the currentWeight of the elevator is greater than its weightLimit
+
+SEQUENCE weightCheck
+
+    OBTAIN weightLimit
+    OBTAIN currentWeight
+
+        IF currentWeight is greater or equal to weightLimit
+            RETURN FALSE
+        ELSE 
+            RETURN TRUE
+
+        END IF 
+
+END SEQUENCE
+
+//This is the sequence that sets origin parameters to the elevators
+
+SEQUENCE origin WITH selectedElevator
+    
+    SET currentFloor to origin
+    SET elevatorDirection to idle
+
+END SEQUENCE
+
+
+//This is the sequence that controls the input of the user
+
+SEQUENCE floorRequest
+
+    OBTAIN requestedFloor
+    OBTAIN userfloor 
+
+        IF userfloor is less than requestedFloor 
+            THEN SET userDirection to UP
+
+        ELSE IF userfloor is greater than requestedFloor
+            THEN SET userDirection to DOWN 
+
+        END IF 
+
+    RETURN requestedFloor and userfloor
+
+END SEQUENCE
+
+
+//This is the sequence that determines wich column to use
+
+SEQUENCE findColumn WITH requestedFloor 
+
+    FOR EACH column in columnList
+
+        IF floorsList contains requestedFloor 
+
+            RETURN column as selectedColumn
+
+        END IF
+
+    END FOR
+
+END SEQUENCE
+
+
+//This is the sequence that determines wich elevator to use 
+
+SEQUENCE findElevator
+
+    OBTAIN userDirection
+    OBTAIN selectedColumn
+    OBTAIN userFloor
+
+    IF selectedColumn is columnA 
+
+        FOR EACH elevator in elevatorsListA 
+
+            OBTAIN currentFloor
+            OBTAIN elevatorDirection
+
+            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
+            THEN SET elevValue to 1
+            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
+            THEN SET elevValue to 2
+            IF currentFloor is less than userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
+            THEN SET elevValue to 3
+            IF currentFloor is less than userFloor AND elevatorDirection is UP and userDirection is DOWN
+            THEN SET elevValue to 4 
+            IF currentFloor is greater than userFloor AND elevatorDirection is IDLE and userDirection is UP
+            THEN SET elevValue to 5
+            IF currentFloor is less than userFloor AND elevatorDirection is UP and userDirection is UP
+            THEN SET elevValue to 6
+            IF currentFloor is less than userFloor AND elevatorDirection is DOWN and userDirection is DOWN 
+            THEN SET elevValue to 7
+            ELSE 
+            SET elelvValue to 10
+
+            END IF 
+
+            DETERMINE elevator with lowest elelvValue 
+            RETURN selectedElevator
+
+        END FOR
+
+    ELSE IF selectedColumn is columnB 
+
+        FOR EACH elevator in elevatorsListB 
+
+            OBTAIN currentFloor
+            OBTAIN elevatorDirection
+
+            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
+            THEN SET elevValue to 1
+            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
+            THEN SET elevValue to 2
+            IF currentFloor is greater than userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
+            THEN SET elevValue to 3
+            IF currentFloor is less than userFloor AND elevatorDirection is IDLE and userDirection is DOWN
+            THEN SET elevValue to 4 
+            IF currentFloor is greater than userFloor AND elevatorDirection is DOWN and userDirection is DOWN
+            THEN SET elevValue to 5
+            IF currentFloor is less than userFloor AND elevatorDirection is UP and userDirection is DOWN
+            THEN SET elevValue to 6
+            IF currentFloor is less than userFloor AND elevatorDirection is DOWN and userDirection is DOWN 
+            THEN SET elevValue to 7
+            ELSE 
+            SET elelvValue to 10
+
+            END IF 
+
+            DETERMINE elevator with lowest elelvValue 
+            RETURN selectedElevator
+
+        END FOR 
+
+    ELSE IF selectedColumn is columnC 
+
+        FOR EACH elevator in elevatorsListC 
+
+            OBTAIN currentFloor
+            OBTAIN elevatorDirection
+
+            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
+            THEN SET elevValue to 1
+            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
+            THEN SET elevValue to 2
+            IF currentFloor is greater than userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
+            THEN SET elevValue to 3
+            IF currentFloor is less than userFloor AND elevatorDirection is IDLE and userDirection is DOWN
+            THEN SET elevValue to 4 
+            IF currentFloor is greater than userFloor AND elevatorDirection is DOWN and userDirection is DOWN
+            THEN SET elevValue to 5
+            IF currentFloor is less than userFloor AND elevatorDirection is UP and userDirection is DOWN
+            THEN SET elevValue to 6
+            IF currentFloor is less than userFloor AND elevatorDirection is DOWN and userDirection is DOWN 
+            THEN SET elevValue to 7
+            ELSE 
+            SET elelvValue to 10
+
+            END IF 
+            DETERMINE elevator with lowest elelvValue 
+            RETURN selectedElevator
+
+        END FOR
+
+    ELSE IF selectedColumn is columnD 
+
+        FOR EACH elevator in elevatorsListD 
+
+            OBTAIN currentFloor
+            OBTAIN elevatorDirection
+
+            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is UP 
+            THEN SET elevValue to 1
+            IF currentFloor is equal to userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
+            THEN SET elevValue to 2
+            IF currentFloor is greater than userFloor AND elevatorDirection is IDLE and userDirection is DOWN 
+            THEN SET elevValue to 3
+            IF currentFloor is less than userFloor AND elevatorDirection is IDLE and userDirection is DOWN
+            THEN SET elevValue to 4 
+            IF currentFloor is greater than userFloor AND elevatorDirection is DOWN and userDirection is DOWN
+            THEN SET elevValue to 5
+            IF currentFloor is less than userFloor AND elevatorDirection is UP and userDirection is DOWN
+            THEN SET elevValue to 6
+            IF currentFloor is less than userFloor AND elevatorDirection is DOWN and userDirection is DOWN 
+            THEN SET elevValue to 7
+            ELSE 
+            SET elelvValue to 10
+
+            END IF 
+            DETERMINE elevator with lowest elelvValue 
+            RETURN selectedElevator
+
+        END FOR 
+    END IF 
+ 
+END SEQUENCE
+
+
+//This is the sequence that controls the movement of the elevator
+
+SEQUENCE moveElevator with selectedColumn and selectedElevator
+
+    OBTAIN requestedFloor
+    OBTAIN userFloor
+    OBTAIN currentFloor of selectedElevator
+    
+    DO selfCheck 
+
+        IF selfcheck is false 
+            THEN DISPLAY "Elevator out of service"
+            BREAK 
+        ELSE 
+            CONTINUE
+
+        END IF
+
+    CALL weightCheck WITH currentWeight
+
+        IF weightCheck is false
+            THEN DISPLAY "Warning! Reduce weight"
+            BREAK
+        ELSE 
+            CONTINUE
+
+        END IF
+
+    WHILE currentFloor is not equal to userFloor OR requestedFloor
+
+        IF currentFloor is greater than userFloor OR requestedFloor
+            THEN SET elevDirection to DOWN 
+
+        ELSE IF currentFloor is less than userFloor OR requestedFloor
+            THEN SET elevDirection to UP
+
+        ELSE 
+            THEN SET elevDirection to IDLE 
+
+            CALL operateDoors 
+
+        END IF
+
+    END WHILE
+
+    IF elevatorDirection is IDLE for more than 1 minute 
+        THEN CALL origin
+
+    END IF 
+
+END SEQUENCE
+
+
+//This is the sequence that operate the elevator doors
+
+SEQUENCE operateDoors
+
+    OBTAIN elevatorDirection
+
+    WHILE elevatorDirection is UP or DOWN 
+        DO close doors 
+        SET OpenDoor to FALSE
+
+            IF elevatorDirection is NULL 
+                WAIT
+                THEN DO open doors
+                SET OpenDoor to TRUE
+                WAIT
+                THEN DO close doors
+                SET OpenDoor to FALSE
+
+                    IF btnElevOpen is pressed 
+                        THEN DO open doors
+                        SET OpenDoor to TRUE 
+                        WAIT
+                        THEN DO close doors
+                        SET OpenDoor to FALSE
+                    END IF
+
+                    IF btnElevClose is pressed
+                        THEN DO close doors
+                        SET OpenDoor to FALSE
+                    END IF
+            END IF
+
+    END WHILE
+
+END SEQUENCE
+
+
+//This is the sequence that controls the whole user interaction with the elevator, including the other sequences
+
+SEQUENCE requestElevator 
+
+    CALL floorRequest RETURNING requestedFloor and userfloor
+
+        CALL findColumn WITH requestedFloor RETURNING selectedColumn
+
+            CALL findElevator WITH selectedColumn RETURNING selectedElevator
+    
+    CALL moveElevator WITH requestedFloor and selectedElevator
+     RETURNING elevatorDirection
+
+END SEQUENCE 

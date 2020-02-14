@@ -1,43 +1,57 @@
-// this program controls residential elevators
+// This program controls residential elevators
 
-//Inventory 
-    //Column 
-        button
-        floor
+INIT elevatorsList as [elevator1, elevator2]
 
-    //Elevator                                                                                                                                                                                                                                      
-        floorsList
-        currentFloor
-        button
-        direction
-        door
+FOR EACH elevator in elevatorsList 
 
-//Sequences 
-    origin
-    elevatorRequest
-    findElevator
-    moveElevator
-    operateDoors
+    SET elevValue 
+    SET elevDirection
+    SET currentFloor
+    SET weightLimit
+    SET origin
 
-SEQUENCE origin 
-    SET currentFloor to floor#1
-    SET elevatorState to idle
+END FOR
+
+
+//This is the sequence that sets origin parameters to the elevators
+
+SEQUENCE origin WITH selectedElevator
+    
+    SET currentFloor to origin
+    SET elevDirection to idle
 
 END SEQUENCE
 
 
-//This is the sequence that inputs floor and direction from the column controller//
+//This is the sequence that determines if the currentWeight of the elevator is greater than its weightLimit
 
-SEQUENCE btnColumn RETURNING floor and direction 
-    OBTAIN floor 
+SEQUENCE weightCheck
 
-    IF btnColumnUp is pressed 
-        THEN SET direction to up
-        RETURN floor & direction
+    OBTAIN weightLimit
+    OBTAIN currentWeight
 
-    ELSE IF btnColumnDown is pressed
-        THEN SET direction to down
-        RETURN floor & direction
+        IF currentWeight is greater or equal to weightLimit
+            RETURN FALSE
+        ELSE 
+            RETURN TRUE
+
+        END IF 
+
+END SEQUENCE
+
+
+//This is the sequence that determine the user position and direction based on the input he gives to the column controller
+
+SEQUENCE elevatorRequest 
+    OBTAIN userFloor 
+
+    IF btnUp is pressed 
+        THEN SET userDirection to UP
+        RETURN userFloor & userDirection
+
+    ELSE 
+        THEN SET userdirection to DOWN
+        RETURN userFloor & userDirection
         
     END IF
 
@@ -46,31 +60,31 @@ END SEQUENCE
 
 //This is the sequence that controls the opening of the elevator doors//
 
-SEQUENCE operateDoors WITH selectedElevator and elevDirection RETURNING doorState
+SEQUENCE operateDoors WITH selectedElevator and elevDirection
 
     WHILE elevDirection is UP or DOWN 
         DO close doors 
-        SET doorState to close
+        SET OpenDoor to FALSE
 
             IF elevDirection is NULL 
-                WAIT five seconds
+                WAIT
                 THEN DO open doors
-                SET doorState to open 
-                WAIT twenty seconds
+                SET OpenDoor to TRUE
+                WAIT
                 THEN DO close doors
-                SET doorState to close
+                SET OpenDoor to FALSE
 
-                    IF btnElevOpen is pressed 
+                    IF btnOpen is pressed 
                         THEN DO open doors
-                        SET doorState to open 
-                        WAIT twenty seconds
+                        SET OpenDoor to TRUE 
+                        WAIT
                         THEN DO close doors
-                        SET doorState to close
+                        SET OpenDoor to FALSE
                     END IF
 
-                    IF btnElevClose is pressed
+                    IF btnClose is pressed
                         THEN DO close doors
-                        SET doorState to close
+                        SET OpenDoor to FALSE
                     END IF
             END IF
 
@@ -78,72 +92,138 @@ SEQUENCE operateDoors WITH selectedElevator and elevDirection RETURNING doorStat
 END SEQUENCE
 
 
-//This is the sequence that finds the correct elevator to send to the user after he calls the elevator//
+//This is the sequence that finds the correct elevator to send to the user after he has called the elevator//
 
-SEQUENCE findElevator WITH floor & direction RETURNING selectedElevator
+SEQUENCE findElevator WITH floor & userDirection
 
     FOR EACH elevator in elevatorsList
+
         OBTAIN elevDirection
         OBTAIN currentFloor of elevator 
-        COMPUTE diffElev as floor minus currentFloor of elevator
+        COMPUTE diffElev as userFloor minus currentFloor of elevator
 
-            IF diffElev equals zero AND elevDirection is UP AND direction is UP
-                THEN RETURN elevator as selectedElevator
-            ELSE IF diffElev is greater than zero AND elevDirection is direction
-                THEN RETURN elevator as selectedElevator
-            ELSE IF diffElev is smaller than zero AND elevDirection equals direction
-                THEN RETURN elevator as selectedElevator
+            IF diffElev equals zero AND elevDirection is IDLE and userDirection is UP
+                THEN SET elevValue to 1
+
+            ELSE IF diffElev equals zero AND elevDirection is IDLE and userDirection is DOWN
+                THEN SET elevValue to 2
+
+            ELSE IF diffElev is greater than zero AND elevDirection is IDLE and userDirection is DOWN
+                THEN SET elevValue to 3
+
+            ELSE IF diffElev is greater than zero AND elevDirection is IDLE and userDirection is UP
+                THEN SET elevValue to 4
+
+            ELSE IF diffElev is greater than zero AND elevDirection is DOWN and userDirection is DOWN
+                THEN SET elevValue to 5
+
+            ELSE IF diffElev is greater than zero AND elevDirection is UP and userDirection is UP 
+                THEN SET elevValue to 6
             
+            ELSE IF diffElev equals zero AND elevDirection is UP and userDirection is UP 
+                THEN SET elevValue to 7
+            
+            ELSE IF diffElev equals zero AND elevDirection is DOWN and userDirection is DOWN 
+                THEN SET elevValue to 8
+            
+            ELSE IF diffElev is greater than zero AND elevDirection is UP and userDirection is DOWN 
+                THEN SET elevValue to 9
+            
+            ELSE IF diffElev is greater than zero AND elevDirection is DOWN and userDirection is UP
+                THEN SET elevValue to 10
 
+            ELSE IF diffElev is equals zero AND elevDirection is UP and userDirection is DOWN 
+                SET elevValue to 11
+            
+            ELSE IF diffElev equals zero AND elevDirection is DOWN and userDirection is UP
+                SET elevValue to 12
             END IF
+
+    END FOR 
+
+    COMPUTE elevator lowest elevValue and lowest diffElev as selectedElevator
+
+    RETURN selectedElevator
 
 END SEQUENCE
 
 
 //This is the sequence that controls the movement of the elevator//
 
-SEQUENCE moveElevator WITH floor and selectedElevator RETURNING elevDirection
+SEQUENCE moveElevator WITH userFloor and selectedElevator
 
     OBTAIN currentFloor of selectedElevator
 
-    WHILE currentFloor is not equal to floor 
+     DO selfCheck 
+    
+        IF selfcheck is false 
+            THEN DISPLAY "Elevator out of service."
+            BREAK 
+        ELSE 
+            CONTINUE
 
-        IF currentFloor is greater than floor 
-            THEN SET elevDirection to goingDown 
+        END IF
 
-        ELSE IF currentFloor is smaller than floor
-            THEN SET elevDirection to goingUP
+    DO weightCheck
 
-        ELSE IF currentFloor equals floor
-            THEN SET elevDirection to NULL          
+        IF weightCheck is false
+            THEN DISPLAY "Warning! Reduce weight."
+            BREAK
+        ELSE 
+            CONTINUE
+
+        END IF
+
+    WHILE currentFloor is not equal to userFloor 
+
+        IF currentFloor is greater than userFloor 
+            THEN SET elevDirection to DOWN 
+            DISPLAY arrow pointing DOWN 
+            RETURN elevDirection
+
+        ELSE IF currentFloor is smaller than userFloor
+            THEN SET elevDirection to UP
+            DISPLAY arrow pointing UP
+            RETURN elevDirection
+
+        ELSE IF currentFloor equals userFloor
+            THEN SET elevDirection to IDLE   
+            RETURN elevDirection  
+
             CALL operateDoors 
+
         END IF
 
     END WHILE
 
-END SEQUENCE
+    IF elevatorDirection is IDLE for more than 1 minute 
+        THEN CALL origin
 
-
-
-//User interacts with elevator to request an elevator//
-
-SEQUENCE elevatorRequest WITH floor and direction
-
-    CALL btnColumn WITH floor and direction
-
-        CALL findElevator WITH floor and direction
-
-            CALL moveElevator WITH floor and selectedElevator
+    END IF
 
 END SEQUENCE
 
 
 
-// User interacts with elevator controller to request a floor//
+//This is the sequence that controls the whole user interaction OUTSIDE of the elevator
 
-SEQUENCE requestFloor WITH floor
+SEQUENCE callElevator
 
-        CALL moveElevator
+        CALL elevatorRequest RETURNING userFloor and userDirection 
+
+            CALL findElevator WITH userFloor and userDirection RETURNING selectedElevator
+
+                CALL moveElevator WITH userFloor and selectedElevator RETURNING elevDirection
+
+END SEQUENCE
+
+
+
+//This is the sequence that controls the whole user interaction INSIDE of the elevator
+
+SEQUENCE requestFloor WITH userFloor    
+    
+    CALL moveElevator with userFloor AND selectedElevator RETURNING elevDirection
     
 END SEQUENCE
 
