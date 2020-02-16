@@ -4,7 +4,7 @@ Contains the algorithm files for the elevator controllers for the New Rocket Ele
 
 // Residentiel 
 
-    Au commencement l'utilisateur fait une requête pour demander l'ascenseur. Peut importe l'étage ou il se trouve, la premiere information que nous allons obtenir est sa position ( étage ) ainsi que sa direction ( UP ou DOWN ). Ceci correspond donc a la sequence "elevatorRequest".
+    Au commencement l'utilisateur fait une requête pour demander l'ascenseur. Peut importe l'étage ou il se trouve, la premiere information que nous allons obtenir est sa position ( étage ) ainsi que sa direction ( UP ou DOWN ). Ceci correspond donc a la sequence "elevatorRequeest".
 
     La deuxieme action qui sera donc nécessaire, après l'interaction de l'utilisateur avec le controleur de colonne a l'extérieur de l'ascenseur, sera donc de trouver l'ascenseur le plus adéquat. Ceci sera réalisé avec la séquence "findElevator". En prenant en compte certaines proprietés pour chacun des ascenceur du batiment (l'étage actuel, la direction de son mouvement et la difference d'étages entre celui-ci et l'utilisateur), je vais donc attribuer un système de pointage aux differents ascenceurs suivant certaines conditions.Par la suite, l'ascenceur obtenant le meilleur pointage et ayant la plus petite difference d'étages en l'utilisateur et lui-mème se verra séléctionner comme "selectedElevator". 
 
