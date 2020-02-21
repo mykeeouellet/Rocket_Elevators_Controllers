@@ -2,23 +2,61 @@
 
 Contains the algorithm files for the elevator controllers for the New Rocket Elevator Solutions for both Residential and Commercial offers
 
-// Residentiel 
+For the Javascript file => Go to line200. There is a test section. Execute your tests there. Follow this format:
 
-    Au commencement l'utilisateur fait une requête pour demander l'ascenseur. Peut importe l'étage ou il se trouve, la premiere information que nous allons obtenir est sa position ( étage ) ainsi que sa direction ( UP ou DOWN ). Ceci correspond donc a la sequence "elevatorRequeest".
+=> Create a column ( like at line.197). The new Column objects takes 3 parameters.
+    column_num = new Column(your_Id, your_TotalFloors, your_TotalElevators)
 
-    La deuxieme action qui sera donc nécessaire, après l'interaction de l'utilisateur avec le controleur de colonne a l'extérieur de l'ascenseur, sera donc de trouver l'ascenseur le plus adéquat. Ceci sera réalisé avec la séquence "findElevator". En prenant en compte certaines proprietés pour chacun des ascenceur du batiment (l'étage actuel, la direction de son mouvement et la difference d'étages entre celui-ci et l'utilisateur), je vais donc attribuer un système de pointage aux differents ascenceurs suivant certaines conditions.Par la suite, l'ascenceur obtenant le meilleur pointage et ayant la plus petite difference d'étages en l'utilisateur et lui-mème se verra séléctionner comme "selectedElevator". 
+=> Manually creating scenarios : go to line.202
 
-    Ensuite en se servant du "selectedElevator" établi a la sequence "findElevator", et de l'étage auquel l'utilisateur se situe, la sequence "moveElevator" va debuter. Le mouvement sera tout simplement défini en spécifiant que tant que l'étage actuel de notre ascenseur n'est pas égal a celui de l'utilisateur, l'ascenceur fera le mouvement approprié a la situation. Donc si l'étage de l'ascenceur est plus petit que celui de l'utilisateur, monte. Et ainsi de suite. Par la suite les portes vont tout simplement s'ouvrir un coup arriver a destination ou un coup que l'ascenceur ne sera plus en mouvement.
+    Elevator 1 currentFloor and Direction
+    column1.elevatorsList[0].currentFloor = 1;
+    column1.elevatorsList[0].direction = "idle";
 
-    Ensuite il suffit de recommencer le processus pour l'interaction avec l'utilisateur a l'interieur de l'ascenceur. En excluant bien sur la sequence "findElevator". 
+    Elevator 2 currentFloor and Direction
+    column1.elevatorsList[1].currentFloor = 1;
+    column1.elevatorsList[1].direction = "idle";
+
+You can specify the current floor of any elevator you want and their direction. In the default scenario there is 2 elevators and 10 floors. The currentFloor needs to be a number [1,2,..],
+and direction needs to be either "up", "down" or "idle".
+
+=> Requesting an elevator and a floor : go to line.211
+
+    {var elevator = column1.requestElevator("up", 5);
+    column1.requestFloor(elevator, 10);}
+
+Using this format you make a request for an elevator (requestElevator) with 2 parameters: direction ["up", "down"] and the floor you are at i.e [1,2,3,...]
+
+You can then make a request for a destination. You need to specify the elevator to move and the floor you wanna go. Here (elevator and floor 10) as our elevator in made into a variable so we can use the same elevator in 'requestFloor' as in 'requestElevator'
+
+---------------------------------------------------------------------------------------
+
+For the python file, everything happens at the top (line.2) in the main function:
+
+    def main():
+        column1 = Column(1, 10, 2)
+        elevator = column1.requestElevator('up', 9)
+        column1.requestFloor(elevator, 10)
+
+=> Initialize the program by creating a Column object with 3 parameters as in :
+
+    column1 = Column(your_Id, your_TotalFloors, your_TotalElevators)
+
+=> => Manually creating scenarios : go to line.8 in the manualSettings() function
+
+    # Elevator 1 attributes ( the floor it's at and its direction)
+    column1.elevatorsList[0].currentFloor = 1
+    column1.elevatorsList[0].direction = "idle"
+
+    # Elevator 2 attributes ( the floor it's at and its direction)
+    column1.elevatorsList[1].currentFloor = 1
+    column1.elevatorsList[1].direction = "idle"
+
+    main()
 
 
-// Commercial 
+You can specify the current floor of any elevator you want and their direction. In the default scenario there is 2 elevators and 10 floors. The currentFloor needs to be a number [1,2,..],and direction needs to be either "up", "down" or "idle".
 
-    Le batiment commercial va fonctionner d'une manière très semblable. A l'exception des colonnes. Étant donné le fait que nous avons plusieurs colonnes controlant plusieurs ascenceurs, nous devons ajouter une sequence avant "findElevator". 
+=> You can now request an elevator and a floor using the same parameters as in the javascript file.
 
-    Après avoir établi un calcul pour spécifier combien d'étages sont déservit a chaque colonnes. Nous allons tout simplement nous servir de l'étages demandé au rez de chaussé par l'utilisateur. Ici le batiment Moderne est choisi comme modele et l'utilisateur doit spécifier au premier étage ou il veut aller. Le chiffre entré sera donc tout simplement analysé pour savoir a quelle liste d'étages deservit pour chaque colonnes il appartient. 
-
-    Par exemple si l'étage spécifié par l'utilisateur est 8, l'algorithme va analyser chacune des colonnes et vérifier si #8 appartient a sa liste d'étages déservit. La sequence "findColumn" va ensuite retourner une colonne sélectionnée, "selectedColumn".
-
-    Par la suite la séquence "findElevator" va determiné a l'aide de "selectedColumn" quel ascenceur envoyé selon certains parametres comme avec le controleur résidentiel et "bouger" l'ascenseur sélectionné. 
+=> You now just have to call the main() function at the end of the program(line.213)!
