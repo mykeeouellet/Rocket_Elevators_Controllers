@@ -1,19 +1,12 @@
 # this is the main function used to test the program
 def main():
     column1 = Column(1, 10, 2)
-    elevator = column1.requestElevator('up', 9)
-    column1.requestFloor(elevator, 10)
+    elevator = column1.requestElevator('up', 2)
+    # column1.requestFloor(elevator, 10)
 
-
+# this is the function you can use in case you wanna set custom scenarios
 def manualSettings():
     column1 = Column(1, 10, 2)
-    # Elevator 1 attributes ( the floor it's at and its direction)
-    column1.elevatorsList[0].currentFloor = 1
-    column1.elevatorsList[0].direction = "idle"
-
-    # Elevator 2 attributes ( the floor it's at and its direction)
-    column1.elevatorsList[1].currentFloor = 1
-    column1.elevatorsList[1].direction = "idle"
     main()
 
 
@@ -72,16 +65,17 @@ class Column():
     def requestElevator(self, direction, requestedFloor):
         self.direction = direction
         self.requestedFloor = requestedFloor
-        print('')
-        print('-----------------User Calls an Elevator---------------')
+        print('======================================================')
+        print('                User Calls the elevator                ')
+        print('======================================================')
         print("A request has been made at floor", str(requestedFloor), ". User is going", str(direction), ".")
-        print('')
-        print('------------------Finding an Elevator----------------')
-        print("Elevator", self.elevatorsList[0].id, "has a total score of", self.elevatorsList[0].totalScore)
-        print("Elevator", self.elevatorsList[1].id, "has a total score of", self.elevatorsList[1].totalScore)
+        print('------------------------------------------------------')
+        print("            Returning an Elevator to the User         ")
         print("")
-        print(" ----------------Returning an Elevator to the User---------------")
         elevator = self.findElevator(direction, requestedFloor)
+
+        #for i in range(len(self.elevatorsList)):
+            #print("Elevator", self.elevatorsList[i].id, "has a total score of", self.elevatorsList[i].totalScore)
 
         # this forLoop resets the TotalScore and value of the elevator
         for i in range(len(self.elevatorsList)):
@@ -152,12 +146,19 @@ class Column():
             else :
                 self.elevatorsList[i].value = 13
 
-            # calculates the totalScore of each elevator as diff plus value
-            self.elevatorsList[i].totalScore = int(diff) + int(self.elevatorsList[i].value)
+            score = int(diff) + int(self.elevatorsList[i].value)
+            self.elevatorsList[i].totalScore = score
+
+        for i in range(len(self.elevatorsList)):
+            print("Elevator", self.elevatorsList[i].id, "has a total score of", self.elevatorsList[i].totalScore)
 
         # sorts the elevatorsList and returning the winning elevator
         self.elevatorsList.sort(key=lambda x: x.totalScore)
+        print("")
+        print("================================================")
         print("Elevator", str(self.elevatorsList[0].id), "has been selected to go to floor", str(requestedFloor))
+        print("================================================")
+        print("")
         self.elevatorsList[0].requestsList.append({requestedFloor, direction})
         self.elevatorsList[0].moveElevator(requestedFloor)
 
@@ -192,10 +193,9 @@ class Elevator():
     # this is the method used to move the elevators
     def moveElevator(self, requestedFloor):
         self.requestedFloor = requestedFloor
-        print('Elevator', str(self.id), 'is currently at floor', str(self.currentFloor))
+        print('              Moving the elevator             ')
         print('')
-        print(" ---------------------Moving the Elevator-----------------")
-
+        print('Elevator', str(self.id), 'is currently at floor', str(self.currentFloor))
         # if elevator floor is less than user floor => move up
         if self.currentFloor < requestedFloor :
             # this loop adds 1 floor each time elevator floor < user floor
@@ -216,11 +216,13 @@ class Elevator():
         if self.currentFloor == requestedFloor:
             self.direction = "idle"
             self.doorStatus = "Opened"
+            print('__________________________________________________')
             print('')
-            print(' ---------------------Elevator has arrived----------------------  ')
+            print('              Elevator has arrived             ')
+            print('')
             print("Elevator", str(self.id), "is", str(self.direction), "at floor", str(self.currentFloor))
             print("Doors at Elevator", str(self.id), "are now ", str(self.doorStatus), "!" )
-            print('')
+            print('===================================================')
 
 # here, the main() function described at the top is called, executing the program
 main()

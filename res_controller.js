@@ -35,19 +35,19 @@ class Column {
 
     //--This is the method that is called when the user requests an elevator--//
     requestElevator(direction, requestedFloor){
-        console.log("");
-        console.log("---------------------User calls the Elevator--------------------");
+        console.log("==========================================================");
+        console.log("                  User calls the Elevator                 ");
+        console.log("==========================================================");
         console.log("A request has been made at floor " + requestedFloor + ". User is going " + direction + ".");
+        console.log("__________________________________________________________");
+        console.log("                  Finding an Elevator                      ");
         console.log("");
-        console.log("-----------------------Finding an Elevator----------------------");
         var elevator = this.findElevator(requestedFloor, direction);
-        console.log("Elevator " + this.elevatorsList[0].id + " has a total score of " + this.elevatorsList[0].totalScore);
-        console.log("Elevator " + this.elevatorsList[1].id + " has a total score of " + this.elevatorsList[1].totalScore);
+        console.log("__________________________________________________________");
+        console.log("          Returning an Elevator to the User               ");
         console.log("");
-        console.log(" ----------------Returning an Elevator to the User---------------");
         console.log("Elevator " + this.elevatorsList[0].id + " has been selected to go to floor " + requestedFloor);
         elevator.moveElevator(requestedFloor);
-        console.log(" ------------------User is entering the Elevator---------------");
         console.log("User is entering elevator " + elevator.id + ".");
 
             for(var i = 0; i < this.elevatorsList.length; i++) {
@@ -108,6 +108,7 @@ class Column {
             }
             //--This compute totalScore as difference plus value--//
             this.elevatorsList[i].totalScore = diff + this.elevatorsList[i].value;
+            console.log("Elevator " + this.elevatorsList[i].id + " has a total score of " + this.elevatorsList[i].totalScore);
         }
         //--This function is used to sort the list of elevators depending on their totalScore--//
         function compare(a, b) {
@@ -161,8 +162,9 @@ class Elevator {
     moveElevator(requestedFloor){
         this.requestedFloor = requestedFloor;
         console.log("Elevator " + this.id + " is currently at floor " + this.currentFloor);
+        console.log("__________________________________________________________");
+        console.log("               Moving the Elevator          ");
         console.log("");
-        console.log(" ---------------------Moving the Elevator-----------------");
 
         //--These If-statements are responsible for moving the elevator to the correct floor--//
         if(this.currentFloor < requestedFloor){
@@ -180,14 +182,12 @@ class Elevator {
         }
         if(this.currentFloor === requestedFloor){
             this.direction = "idle";
+            console.log("______________________________________________________");
+            console.log("               Elevator has arrived         ");
             console.log("");
-            console.log(" ---------------------Elevator has arrived----------------------  ");
             console.log("Elevator " + this.id + " is " + this.direction + " at floor " + this.currentFloor);
             this.doorStatus = "opened";
             console.log("Doors at Elevator " + this.id + " are now " + this.doorStatus + " !" );
-            console.log("");
-            console.log(" ---------------------//--------------------  ");
-            console.log("");
         }
     }
 }
@@ -197,7 +197,6 @@ class Elevator {
 let column1 = new Column(1, 10, 2);
 
 //----------------SECTION TEST--------------//
-console.log(column1);
 
 //--Elevator 1 currentFloor and Direction--//
 // column1.elevatorsList[0].currentFloor = 1;
@@ -209,4 +208,4 @@ console.log(column1);
 
 
 var elevator = column1.requestElevator("up", 5);
-elevator = column1.requestElevator("down", 10);
+// elevator = column1.requestElevator("down", 10);
