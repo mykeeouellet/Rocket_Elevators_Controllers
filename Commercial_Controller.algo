@@ -30,21 +30,20 @@ END FOR
 //This is the sequence that sets origin parameters to the elevators
 
 SEQUENCE origin USING selectedElevator
-    
-    OBTAIN elevator.origin 
-    
-    IF elevator.currentFloor is greater than elevator.origin 
-        DO moveDown 
+
+    OBTAIN elevator.origin
+
+    IF elevator.currentFloor is greater than elevator.origin
+        DO moveDown
         THEN SET elevator.status to down
 
-    IF elevator.currentFloor is less than elevator.origin 
-        DO moveUp 
+    IF elevator.currentFloor is less than elevator.origin
+        DO moveUp
         THEN SET elevator.status to up
 
-    ELSE 
+    ELSE
         DO idle
         THEN SET elevator.status to idle
-    
     END IF
 
 END SEQUENCE
@@ -53,13 +52,13 @@ END SEQUENCE
 
 SEQUENCE floorRequest USING requestedFloor and userFloor
 
-        IF userfloor is less than requestedFloor 
+        IF userfloor is less than requestedFloor
             THEN SET userDirection to UP
 
         ELSE IF userfloor is greater than requestedFloor
-            THEN SET userDirection to DOWN 
+            THEN SET userDirection to DOWN
 
-        END IF 
+        END IF
 
     RETURN userDirection
 
@@ -67,11 +66,11 @@ END SEQUENCE
 --------------------------------------------------------------------------------------------------------
 //This is the sequence that determines wich column to use
 
-SEQUENCE findColumn USING requestedFloor 
+SEQUENCE findColumn USING requestedFloor
 
     FOR EACH column in columnList
 
-        IF column.floorsList contains requestedFloor 
+        IF column.floorsList contains requestedFloor
 
             RETURN column as selectedColumn
 
@@ -81,13 +80,13 @@ SEQUENCE findColumn USING requestedFloor
 
 END SEQUENCE
 ----------------------------------------------------------------------------------------------------
-//This is the sequence that determines wich elevator to use 
+//This is the sequence that determines wich elevator to use
 
 SEQUENCE findElevator USING selectedColumn, userFloor and userDirection
 
-    IF selectedColumn is columnA 
+    IF selectedColumn is columnA
 
-        FOR EACH elevator in selectedColumn elevatorsList 
+        FOR EACH elevator in selectedColumn elevatorsList
 
             OBTAIN elevator.currentFloor
             OBTAIN elevator.status
@@ -100,24 +99,24 @@ SEQUENCE findElevator USING selectedColumn, userFloor and userDirection
             IF elevator.currentFloor is less than userFloor AND elevator.status is IDLE and userDirection is DOWN 
             THEN SET elevator.value to 3
             IF elevator.currentFloor is less than userFloor AND elevator.status is UP and userDirection is DOWN
-            THEN SET elevator.value to 4 
+            THEN SET elevator.value to 4
             IF elevator.currentFloor is greater than userFloor AND elevator.status is IDLE and userDirection is UP
             THEN SET elevator.value to 5
             IF elevator.currentFloor is less than userFloor AND elevator.status is UP and userDirection is UP
             THEN SET elevator.value to 6
             IF elevator.currentFloor is less than userFloor AND elevator.status is DOWN and userDirection is DOWN 
             THEN SET elevator.value to 7
-            ELSE 
+            ELSE
             SET elevator.value to 10
 
-            END IF 
+            END IF
 
-            DETERMINE elevator with lowest elevator.value and lowest diffElev as selectedElevator 
+            DETERMINE elevator with lowest elevator.value and lowest diffElev as selectedElevator
             RETURN selectedElevator
 
         END FOR
- 
-    ELSE 
+
+    ELSE
         FOR EACH elevator in selectedColumn elevatorsList
 
             OBTAIN elevator.currentFloor
@@ -131,26 +130,25 @@ SEQUENCE findElevator USING selectedColumn, userFloor and userDirection
             IF elevator.currentFloor is greater than userFloor AND elevator.status is IDLE and userDirection is DOWN 
             THEN SET elevator.value to 3
             IF elevator.currentFloor is less than userFloor AND elevator.status is IDLE and userDirection is DOWN
-            THEN SET elevator.value to 4 
+            THEN SET elevator.value to 4
             IF elevator.currentFloor is greater than userFloor AND elevator.status is DOWN and userDirection is DOWN
             THEN SET elevator.value to 5
             IF elevator.currentFloor is less than userFloor AND elevator.status is UP and userDirection is DOWN
             THEN SET elevator.value to 6
             IF elevator.currentFloor is less than userFloor AND elevator.status is DOWN and userDirection is DOWN 
             THEN SET elevator.value to 7
-            ELSE 
+            ELSE
             SET elevator.value to 10
 
-            END IF 
+            END IF
 
-            DETERMINE elevator with lowest elevator.value and lowest diffElev as selectedElevator  
+            DETERMINE elevator with lowest elevator.value and lowest diffElev as selectedElevator
             RETURN selectedElevator
 
-        END FOR 
+        END FOR
 
-   
-    END IF 
- 
+    END IF
+
 END SEQUENCE
 -----------------------------------------------------------------------------------------------------------------------------
 //This is the sequence that determines if the currentWeight of the elevator is greater than its weightLimit
@@ -161,10 +159,10 @@ SEQUENCE weightCheck USING elevator.currentWeight
 
         IF elevator.currentWeight is greater or equal to elevator.weightLimit
             RETURN FALSE
-        ELSE 
-            RETURN TRUE
+        ELSE
+            RETuRN TRUE
 
-        END IF 
+        END IF
 
 END SEQUENCE
 ------------------------------------------------------------------------------------------------------------------------------
@@ -173,13 +171,13 @@ END SEQUENCE
 SEQUENCE moveElevator USING selectedColumn, selectedElevator, requestedFloor and userFloor
 
     OBTAIN elevator.currentFloor of selectedElevator
-    
-    DO selfCheck 
 
-        IF selfcheck is false 
+    DO selfCheck
+
+        IF selfcheck is false
             THEN DISPLAY "Elevator out of service"
-            BREAK 
-        ELSE 
+            BREAK
+        ELSE
             CONTINUE
 
         END IF
@@ -189,7 +187,7 @@ SEQUENCE moveElevator USING selectedColumn, selectedElevator, requestedFloor and
         IF weightCheck is false
             THEN DISPLAY "Warning! Reduce weight"
             BREAK
-        ELSE 
+        ELSE
             CONTINUE
 
         END IF
@@ -198,25 +196,25 @@ SEQUENCE moveElevator USING selectedColumn, selectedElevator, requestedFloor and
 
         IF elevator.currentFloor is greater than userFloor OR requestedFloor
             DO moveDown
-            THEN SET elevator.status to down 
+            THEN SET elevator.status to down
 
         ELSE IF elevator.currentFloor is less than userFloor OR requestedFloor
             DO moveUp
             THEN SET elevator.status to up
 
-        ELSE 
+        ELSE
             DO idle
-            THEN SET elevator.status to idle 
+            THEN SET elevator.status to idle
              CALL operateDoors WITH selectedColumn and selectedElevator
 
         END IF
 
     END WHILE
 
-    IF elevator.status is idle for more than 1 minute 
+    IF elevator.status is idle for more than 1 minute
         THEN CALL origin WITH selectedColumn and selectedElevator
 
-    END IF 
+    END IF
 
     RETURN elevator.status
 
@@ -228,11 +226,11 @@ SEQUENCE operateDoors USING selectedColumn and selectedElevator
 
     OBTAIN elevator.status
 
-    WHILE elevator.status is UP or DOWN 
-        DO close doors 
+    WHILE elevator.status is UP or DOWN
+        DO close doors
         SET elevator.door to close
 
-            IF elevator.status is IDLE 
+            IF elevator.status is IDLE
                 WAIT
                 THEN DO open doors
                 SET elevator.door to open
@@ -240,9 +238,9 @@ SEQUENCE operateDoors USING selectedColumn and selectedElevator
                 THEN DO close doors
                 SET elevator.door to close
 
-                    IF btnOpen is pressed 
+                    IF btnOpen is pressed
                         THEN DO open doors
-                        SET elevator.door to open 
+                        SET elevator.door to open
                         WAIT
                         THEN DO close doors
                         SET elevator.door to close
@@ -261,16 +259,16 @@ END SEQUENCE
 ---------------------------------------------------------------------------------------------------------------
 //This is the sequence that controls the whole user interaction with the elevator, including the other sequences
 
-SEQUENCE requestElevator 
+SEQUENCE requestElevator
 
     CALL floorRequest WITH requestedFloor and userFloor RETURNING userDirection
 
         CALL findColumn WITH requestedFloor and userFloor RETURNING selectedColumn
 
             CALL findElevator WITH selectedColumn, userFloor and userDirection RETURNING selectedElevator
- 
-    CALL moveElevator WITH selectedColumn, selectedElevator, requestedFloor and userFloor RETURNING elevator.status
-    
 
-END SEQUENCE 
+    CALL moveElevator WITH selectedColumn, selectedElevator, requestedFloor and userFloor RETURNING elevator.status
+
+
+END SEQUENCE
 ---------------------------------------------------------------------------------------------------------------------
