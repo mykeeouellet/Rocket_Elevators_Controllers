@@ -66,7 +66,7 @@ func (b *battery) manualSettings() {
 	// =================================================== //
 }
 
-// Battery struct => contains columns
+// Battery struct => contains columns //
 type battery struct {
 	id            int
 	mainFloor     int
@@ -78,7 +78,7 @@ type battery struct {
 	floorsList    []int
 }
 
-// Column struct => contains elevators
+// Column struct => contains elevators //
 type column struct {
 	id                int
 	numberOfElevators int
@@ -87,7 +87,7 @@ type column struct {
 	maxOperatingFloor int
 }
 
-// Elevator struct => contains all the parameters of each elevators
+// Elevator struct => contains all the parameters of each elevators //
 type elevator struct {
 	id           int
 	value        int
@@ -97,7 +97,7 @@ type elevator struct {
 	doorStatus   string
 }
 
-// User struct -=> contains parameters for the user as position & direction
+// User struct -=> contains parameters for the user as position & direction //
 type user struct {
 	direction string
 	floor     int
@@ -114,9 +114,11 @@ func batteryInit() battery {
 		totalColumn:   4,
 		totalElevator: 20}
 
+	// Calculating the number of elevators per column //
 	numElevators := b1.totalElevator / b1.totalColumn
 	elevatorsList := []elevator{}
 
+	// For the given number of elevator per column, generates an elevatorsList //
 	for j := 1; j <= numElevators; j++ {
 		aElevator := elevator{
 
@@ -129,11 +131,15 @@ func batteryInit() battery {
 		}
 		elevatorsList = append(elevatorsList, aElevator)
 	}
+
+	// For the given number column, generates a columnList //
 	for i := 1; i <= b1.totalColumn; i++ {
+		// Formula to determine max operating floor && min operating floor //
 		numFloorPerColumn := (b1.totalFloor - b1.totalBasement) / (b1.totalColumn - 1)
 		maxOperatingFloor := ((i - 1) * numFloorPerColumn)
 		minOperatingFloor := maxOperatingFloor - (numFloorPerColumn - 1)
 
+		// Creating the column that operates the basement //
 		if i == 1 {
 			aColumn := column{
 				id:                i,
@@ -144,6 +150,7 @@ func batteryInit() battery {
 			}
 			b1.columnList = append(b1.columnList, aColumn)
 		}
+		// Creating the columns that operates the upper floors //
 		if i > 1 {
 			aColumn := column{
 				id:                i,
@@ -160,6 +167,7 @@ func batteryInit() battery {
 
 // ============== This method is used when the user *from RC* requests another floor ========//
 func (b *battery) assignElevator(requestedFloor int) user {
+	// Setting user position and direction //
 	var aUser user
 	aUser.floor = 0
 	if aUser.floor > requestedFloor {
@@ -168,10 +176,14 @@ func (b *battery) assignElevator(requestedFloor int) user {
 	} else if aUser.floor < requestedFloor {
 		aUser.direction = "up"
 	}
+
+	// Printing lines to make to program clearer //
 	fmt.Println("======== Requesting a floor ==========")
 	fmt.Println("A request has been made to go to", requestedFloor, ". User is going", aUser.direction)
 	fmt.Println("")
 	fmt.Println("======== Returning a column ============")
+
+	// Nesting multiple methods. FindColumn, FindElevator and MoveElevator //
 	selectedColumn := b.findColumn(requestedFloor)
 	selectedElevator := selectedColumn.findElevator(selectedColumn, aUser.floor, requestedFloor, aUser.direction)
 	selectedElevator.moveElevator(aUser.floor)
@@ -186,6 +198,7 @@ func (b *battery) assignElevator(requestedFloor int) user {
 
 // =============== This method is used when the user wants to go *to RC* from another floor
 func (b *battery) requestElevator(floorNumber int) user {
+	// Setting user position and direction //
 	var aUser user
 	aUser.floor = floorNumber
 
@@ -195,10 +208,14 @@ func (b *battery) requestElevator(floorNumber int) user {
 	} else if aUser.floor <= -1 {
 		aUser.direction = "up"
 	}
+
+	// Printing lines to make the program clearer //
 	fmt.Println("======== Request ground floor ==========")
 	fmt.Println("A request has been made at floor", aUser.floor, ". User is going", aUser.direction)
 	fmt.Println("")
 	fmt.Println("======== Returning a column ============")
+
+	// Nesting multiple methods. Find column, FindElevator and MoveElevator //
 	selectedColumn := b.findColumn(floorNumber)
 	selectedElevator := selectedColumn.findElevator(selectedColumn, floorNumber, floorNumber, aUser.direction)
 	fmt.Println("======== Elevator is moving to User ===========")
@@ -264,12 +281,16 @@ func (c *column) findElevator(selectedColumn column, requestedFloor int, userFlo
 				selectedColumn.elevatorsList[i].value = 15
 			}
 		}
+
+		// Determines the totalScore of each elevators, later used to compare each elevator //
 		selectedColumn.elevatorsList[i].totalScore = floorDiff + selectedColumn.elevatorsList[i].value
 		fmt.Println("Elevator n°", selectedColumn.elevatorsList[i].id, "has a total score of", selectedColumn.elevatorsList[i].totalScore)
 	}
+	// Sorting the elevatorsList based on their totalScore given before //
 	sort.Slice(selectedColumn.elevatorsList, func(i, j int) bool {
 		return selectedColumn.elevatorsList[i].totalScore < selectedColumn.elevatorsList[j].totalScore
 	})
+	// Selecting the best elevator to use, first in the list is the winning one after sorting //
 	selectedElevator := selectedColumn.elevatorsList[0]
 	fmt.Println("")
 	fmt.Println("======= Returning an elevator =========")
@@ -282,11 +303,14 @@ func (c *column) findElevator(selectedColumn column, requestedFloor int, userFlo
 // ============== this method finds a column after a request =========== //
 func (b *battery) findColumn(requestedFloor int) column {
 	var selectedColumn column
+	// For each column in the list, finding the one that matches the request //
+	// based on the max and min operating floors. Only one can be selected.  //
 	for i, eachColumn := range b.columnList {
 		if requestedFloor <= b.columnList[i].maxOperatingFloor && requestedFloor >= b.columnList[i].minOperatingFloor {
 			selectedColumn = eachColumn
 		}
 	}
+	// Returning the column that has been selected //
 	fmt.Println("Column n°", selectedColumn.id, ", operating from floor", selectedColumn.minOperatingFloor, "to", selectedColumn.maxOperatingFloor, ", has been selected.")
 	fmt.Println("")
 	return selectedColumn
@@ -294,10 +318,13 @@ func (b *battery) findColumn(requestedFloor int) column {
 
 // ============== this method moves the elevator that is used =========== //
 func (e *elevator) moveElevator(requestedFloor int) int {
+
+	// While elevator is below the requested floor ==> go UP //
 	for e.currentFloor < requestedFloor {
 		e.currentFloor = e.currentFloor + 1
 		e.direction = "up"
 		fmt.Println("Elevator n°", e.id, "going", e.direction, "to floor", e.currentFloor)
+		// if elevator is at the same floor as the request ==> STOP //
 		if e.currentFloor == requestedFloor {
 			fmt.Println("")
 			fmt.Println("======== Elevator has stopped =========")
@@ -305,11 +332,12 @@ func (e *elevator) moveElevator(requestedFloor int) int {
 			fmt.Println("Elevator n°", e.id, "is", e.direction, "at floor", e.currentFloor)
 		}
 	}
-
+	// While elevator is over the requested floor ==> go DOWN //
 	for e.currentFloor > requestedFloor {
 		e.currentFloor = e.currentFloor - 1
 		e.direction = "down"
 		fmt.Println("Elevator n°", e.id, "going", e.direction, "to floor", e.currentFloor)
+		// if elevator is at the same floor as the request ==> STOP //
 		if e.currentFloor == requestedFloor {
 			fmt.Println("")
 			fmt.Println("======== Elevator has stopped =========")

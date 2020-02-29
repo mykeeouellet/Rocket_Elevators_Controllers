@@ -48,15 +48,16 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
     //          This is the Battery Class          //
     public class Battery
     {
+        //============= Initiating Variables =======================//
         public int id, mainFloor,totalFloor, totalBasement, totalColumn, totalElevator, requestedFloor;
         public List<Column> columnList;
         public Column selectedColumn;
-
         public int userFloor;
         public string userDirection;
-
         public Elevator selectedElevator;
+        //==========================================================//
 
+        // ========= Battery Constructor ========= //
         public Battery (int id, int mainFloor, int totalFloor, int totalBasement, int totalColumn, int totalElevator)
         {
             this.id = id;
@@ -67,14 +68,17 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
             this.totalElevator = totalElevator;
             this.columnList = new List<Column>();
 
+            // Calculating the number of elevator per column //
             var numElevator = this.totalElevator / this.totalColumn;
 
+            // === Generating Columns with their operating Floors === //
             for (int i = 1; i <= this.totalColumn; i++){
-
+                // Formula to determine max operating floor && min operating floor //
                 var	numFloorPerColumn = (totalFloor - totalBasement) / (totalColumn - 1);
 		        var maxOperatingFloor = ((i - 1) * numFloorPerColumn);
 		        var minOperatingFloor = maxOperatingFloor - (numFloorPerColumn - 1);
 
+                // Creating the column that operates the basement //
                 if (i == 1) {
                     Column column = new Column(
                         id: i,
@@ -84,6 +88,7 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
                     );
                     columnList.Add(column);
                 }
+                // Creating all the other columns //
                 if (i > 1) {
                     Column column = new Column(
                         id: i,
@@ -99,18 +104,26 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
         // === This is used to request RC from another floor === //
         public void requestElevator(int floorNumber)
         {
+            // Setting user position and direction //
             userFloor = floorNumber;
             if(userFloor >= 1){
                 userDirection = "down";
             } else if (userFloor < -1){
                 userDirection = "up";
             }
+
+            // User wants to go to RC, so requestedFloor = 0 //
             requestedFloor = 0;
+
+            // Console Writing to make the program clearer //
             Console.WriteLine("");
             Console.WriteLine("======== Request ground floor ==========");
 	        Console.WriteLine("A request has been made at floor " + userFloor + ". User is going " + userDirection);
 	        Console.WriteLine("");
 	        Console.WriteLine("======== Returning a column ============");
+
+            // Nesting findColumn, findElevator and 2 moveElevator //
+            //        (first to the user, then destination)        //
             selectedColumn = findColumn(floorNumber);
             selectedElevator = selectedColumn.findElevator(selectedColumn, floorNumber, userDirection);
             Console.WriteLine("=========== Moving to User ============");
@@ -126,18 +139,21 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
         // This method is used when the user *from RC* requests another floor //
         public void assignElevator(int requestedFloor)
         {
+            // Setting user position and direction //
             userFloor = 0;
             if (userFloor > requestedFloor){
                 userDirection = "down";
             }else if (userFloor < requestedFloor){
                 userDirection = "up";
             }
+            // Console writing to make the program clearer //
             Console.WriteLine("");
             Console.WriteLine("======== Requesting a floor ==========");
 	        Console.WriteLine("A request has been made to go to " + requestedFloor + ". User is going " + userDirection);
 	        Console.WriteLine("");
 	        Console.WriteLine("======== Returning a column ============");
 
+            // Nesting findColumn, findElevator and 2 moveElevator //
             selectedColumn = findColumn(requestedFloor);
             selectedElevator = selectedColumn.findElevator(selectedColumn, userFloor, userDirection);
             selectedElevator.moveElevator(userFloor);
@@ -149,6 +165,10 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
             Console.WriteLine("=======================================");
         }
 
+
+    //     ===================================================     //
+    //    Here are described a few scenarios to test the program   //
+    //     ===================================================     //
         public void scenario2() {
         Console.WriteLine("======================================");
 	    Console.WriteLine("||  Scenario 2 has been activated   ||");
@@ -291,9 +311,11 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
     //          This is the Column Class           //
      public class Column
     {
+        // ======== Declaring variables =========== //
         public int id, numberOfelevator, minOperatingFloor, maxOperatingFloor, floorDiff;
         public List<Elevator> elevatorsList;
         public Elevator selectedElevator;
+        // ======================================== //
 
         // ========= Column Constructor ========== //
         public Column (int id, int numberOfelevator, int minOperatingFloor, int maxOperatingFloor)
@@ -317,6 +339,8 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
                 elevatorsList.Add(elevator);
             }
         }
+
+        // this method finds the best elevator for the user, based on the request that has been made //
         public Elevator findElevator(Column selectedColumn, int userFloor, string userDirection)
         {   // === Going through each elevators in the list of elevators for the selected Column === //
             for (int i = 0; i < elevatorsList.Count; i++){
@@ -387,9 +411,13 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
     //          This is the Elevator Class         //
     public class Elevator
     {
+
+        // ========= Declaring variables ====== //
         public int id, value, currentFloor, totalScore;
         public string direction, doorStatus;
+        // ====================================== //
 
+        // This is the elevator construct //
         public Elevator (int id, int value, int currentFloor, int totalScore, string direction, string doorStatus)
         {
             this.id = id;
@@ -400,14 +428,19 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
             this.doorStatus = doorStatus;
         }
 
+        // this method is called to move the elevators //
         public int moveElevator(int requestedFloor)
         {
+            // Console writing to make the program clearer //
             Console.WriteLine("Elevator n°" + id + " || currently at floor: " + currentFloor);
             Console.WriteLine("");
+
+            // While elevator is below requested floor ==> go UP //
             while (currentFloor < requestedFloor){
                 direction = "up";
                 currentFloor = currentFloor + 1;
                 Console.WriteLine("Elevator n°" + id + " || going " + direction + " to floor: " + currentFloor);
+                    // If the elevator is at the same floor as the request ==> STOP //
                     if (currentFloor == requestedFloor) {
                         Console.WriteLine("");
 			            Console.WriteLine("======== Elevator has stopped =========");
@@ -416,10 +449,12 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
                         Console.WriteLine("");
                     }
             }
+            // While elevator is over requested floor ==> go DOWN //
             while (currentFloor > requestedFloor){
                 direction = "down";
                 currentFloor = currentFloor - 1;
                 Console.WriteLine("Elevator n°" + id + " || going " + direction + " to floor: " + currentFloor);
+                    // If the elevator is at the same floor as the request ==> STOP //
                     if (currentFloor == requestedFloor) {
                         Console.WriteLine("");
 			            Console.WriteLine("======== Elevator has stopped =========");
@@ -428,6 +463,7 @@ namespace Elevator_Control_Project___Week_1___Odyssey__
                         Console.WriteLine("");
                     }
             }
+            // Returns the currentFloor of the elevator that's been moved //
             return currentFloor;
         }
     }
