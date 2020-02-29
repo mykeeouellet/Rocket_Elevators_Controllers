@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\mykee\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\mykee\\.nuget\\packages"
+    ]
+  }
+}

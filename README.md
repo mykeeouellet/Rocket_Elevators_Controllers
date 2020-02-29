@@ -2,61 +2,97 @@
 
 Contains the algorithm files for the elevator controllers for the New Rocket Elevator Solutions for both Residential and Commercial offers
 
-For the Javascript file => Go to line200. There is a test section. Execute your tests there. Follow this format:
+=====================================
+GoLang Commercial Building Controller
+=====================================
 
-=> Create a column ( like at line.197). The new Column objects takes 3 parameters.
-    column_num = new Column(your_Id, your_TotalFloors, your_TotalElevators)
+Using the program is fairly simple. At line 24 you have the main() function
+Shown here :
 
-=> Manually creating scenarios : go to line.202
+    func main() {
+	b1 := batteryInit() <== this initiate the battery
 
-    Elevator 1 currentFloor and Direction
-    column1.elevatorsList[0].currentFloor = 1;
-    column1.elevatorsList[0].direction = "idle";
+==> If you want to manually change battery settings, go to line 107.
+Shown here :
 
-    Elevator 2 currentFloor and Direction
-    column1.elevatorsList[1].currentFloor = 1;
-    column1.elevatorsList[1].direction = "idle";
+    func batteryInit() battery {
+	b1 := battery{
 
-You can specify the current floor of any elevator you want and their direction. In the default scenario there is 2 elevators and 10 floors. The currentFloor needs to be a number [1,2,..],
-and direction needs to be either "up", "down" or "idle".
+		id:            1,   <== Battery id.
+		mainFloor:     0,   <== RC floor, set to 0.
+		totalFloor:    66,  <== Total num of floors in your building.
+		totalBasement: 6,   <== Total num of basements in your building.
+		totalColumn:   4,   <== Total num of columns in your building.
+		totalElevator: 20}  <== Total num of elevators in your building.
 
-=> Requesting an elevator and a floor : go to line.211
+==> Once the battery is generatated, you can either play prefab scenarios
+    or you can manually configure your own scenarios.
 
-    {var elevator = column1.requestElevator("up", 5);
-    column1.requestFloor(elevator, 10);}
+Prefab scenario are at line 34 :
 
-Using this format you make a request for an elevator (requestElevator) with 2 parameters: direction ["up", "down"] and the floor you are at i.e [1,2,3,...]
+    // ========= Scenario player ========== //
+	//     Select one scenario at a time    //
+	//        uncomment to activate         //
+	// ==================================== //
+	// b1.scenario1()
+	// b1.scenario2()
+	// b1.scenario3()
+	// b1.scenario4()
 
-You can then make a request for a destination. You need to specify the elevator to move and the floor you wanna go. Here (elevator and floor 10) as our elevator in made into a variable so we can use the same elevator in 'requestFloor' as in 'requestElevator'
+Manual settings are configured at line 53:
 
----------------------------------------------------------------------------------------
+    // Elevator's currentFloor settings :
+	b.columnList[1].elevatorsList[0].currentFloor = 2
+	b.columnList[1].elevatorsList[1].currentFloor = 0
+	b.columnList[1].elevatorsList[2].currentFloor = 10
+	b.columnList[1].elevatorsList[3].currentFloor = 4
+	b.columnList[1].elevatorsList[4].currentFloor = 19
+	// =================================================== //
+	// Elevator's direction settings ("up", "idle" or "down") :
+	b.columnList[1].elevatorsList[0].direction = "idle"
+	b.columnList[1].elevatorsList[1].direction = "idle"
+	b.columnList[1].elevatorsList[2].direction = "idle"
+	b.columnList[1].elevatorsList[3].direction = "idle"
+	b.columnList[1].elevatorsList[4].direction = "idle"
 
-For the python file, everything happens at the top (line.2) in the main function:
+=====================================
+C# Commercial Building Controller
+=====================================
 
-    def main():
-        column1 = Column(1, 10, 2)
-        elevator = column1.requestElevator('up', 9)
-        column1.requestFloor(elevator, 10)
+Using the program is fairly simple. At line 23 you have the main() function
+Shown here :
 
-=> Initialize the program by creating a Column object with 3 parameters as in :
+     static void Main(string[] args)
+        {
+        //====== Creating a new battery here =======//
+         Battery b1 = new Battery(1, 0, 66, 6, 4, 20);
 
-    column1 = Column(your_Id, your_TotalFloors, your_TotalElevators)
+==> There you can generate a battery. The program won't run without it.
 
-=> => Manually creating scenarios : go to line.8 in the manualSettings() function
+==> Once the battery is generatated, you can either play prefab scenarios
+    or you can manually configure your own scenarios.
 
-    # Elevator 1 attributes ( the floor it's at and its direction)
-    column1.elevatorsList[0].currentFloor = 1
-    column1.elevatorsList[0].direction = "idle"
+Prefab scenario are at line 29 :
 
-    # Elevator 2 attributes ( the floor it's at and its direction)
-    column1.elevatorsList[1].currentFloor = 1
-    column1.elevatorsList[1].direction = "idle"
+        //===== Select one of these scenarios ======//
+        //          uncomment to activate           //
+        // b1.scenario1();
+        // b1.scenario2();
+        // b1.scenario3();
+        // b1.scenario4();
 
-    main()
+Manual settings are configured at line 259 :
 
-
-You can specify the current floor of any elevator you want and their direction. In the default scenario there is 2 elevators and 10 floors. The currentFloor needs to be a number [1,2,..],and direction needs to be either "up", "down" or "idle".
-
-=> You can now request an elevator and a floor using the same parameters as in the javascript file.
-
-=> You now just have to call the main() function at the end of the program(line.213)!
+        // Elevator's currentFloor settings :
+    columnList[1].elevatorsList[0].currentFloor = 2;
+    columnList[1].elevatorsList[1].currentFloor = 0;
+    columnList[1].elevatorsList[2].currentFloor = 10;
+    columnList[1].elevatorsList[3].currentFloor = 4;
+    columnList[1].elevatorsList[4].currentFloor = 19;
+    // ========================================== //
+    // Elevator's direction settings ("up", "idle" or "down") :
+    columnList[1].elevatorsList[0].direction = "idle";
+    columnList[1].elevatorsList[1].direction = "idle";
+    columnList[1].elevatorsList[2].direction = "idle";
+    columnList[1].elevatorsList[3].direction = "idle";
+    columnList[1].elevatorsList[4].direction = "idle";

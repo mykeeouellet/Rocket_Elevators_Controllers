@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "Elevator Control Project ( Week 1 - Odyssey )/1.0.0": {
+        "runtime": {
+          "Elevator Control Project ( Week 1 - Odyssey ).dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Elevator Control Project ( Week 1 - Odyssey )/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

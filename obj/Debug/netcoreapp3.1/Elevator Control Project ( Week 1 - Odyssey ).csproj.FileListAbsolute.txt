@@ -1,0 +1,11 @@
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\bin\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).exe
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\bin\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).deps.json
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\bin\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).runtimeconfig.json
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\bin\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).runtimeconfig.dev.json
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\bin\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).dll
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\bin\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).pdb
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\obj\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).csprojAssemblyReference.cache
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\obj\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).AssemblyInfoInputs.cache
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\obj\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).AssemblyInfo.cs
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\obj\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).dll
+C:\Users\mykee\Desktop\Codeboxx\Livrables\Week-1\Elevator Control Project ( Week 1 - Odyssey )\obj\Debug\netcoreapp3.1\Elevator Control Project ( Week 1 - Odyssey ).pdb

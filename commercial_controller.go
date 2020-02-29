@@ -23,12 +23,10 @@ import (
 
 func main() {
 	b1 := batteryInit()
-
 	// ========= Manual settings ========== //
 	//        uncomment to activate         //
 	// ==================================== //
 	// b1.manualSettings()
-
 	// ========= Scenario player ========== //
 	//     Select one scenario at a time    //
 	//        uncomment to activate :)      //
@@ -37,7 +35,6 @@ func main() {
 	b1.scenario2()
 	// b1.scenario3()
 	// b1.scenario4()
-
 	// ==================================== //
 	// b1.requestElevator(22)
 	// b1.assignElevator(26)
@@ -273,7 +270,6 @@ func (c *column) findElevator(selectedColumn column, requestedFloor int, userFlo
 	sort.Slice(selectedColumn.elevatorsList, func(i, j int) bool {
 		return selectedColumn.elevatorsList[i].totalScore < selectedColumn.elevatorsList[j].totalScore
 	})
-	fmt.Println(selectedColumn.elevatorsList)
 	selectedElevator := selectedColumn.elevatorsList[0]
 	fmt.Println("")
 	fmt.Println("======= Returning an elevator =========")
